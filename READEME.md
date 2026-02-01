@@ -10,10 +10,10 @@ sur **8 ans** (2017-2025), réalisée pour l'agence immobilière **Piazza Marghe
 
 Le projet se structure en **2 phases complémentaires** :
 
-###  [Phase 1 : Analyse Rétrospective (https://github.com/dfatoumata/projet_antony_portfolio/tree/c1b167e6440eab20bc7a9997146e977db2ba9312/partie2_immobilier_antony_S1_2025)
+###  [Phase 1 : Analyse Rétrospective] (https://github.com/dfatoumata/projet_antony_portfolio/tree/main/partie1_situation_globale_2017_2021)
 **Comprendre le passé** - Diagnostic du marché et impact COVID
 
-###  [Phase 2 : Analyse Prédictive (S1 2025)] (https://github.com/dfatoumata/projet_antony_portfolio/tree/c1b167e6440eab20bc7a9997146e977db2ba9312/partie2_immobilier_antony_S1_2025)
+###  [Phase 2 : Analyse Prédictive (S1 2025)] (https://github.com/dfatoumata/projet_antony_portfolio/tree/main/partie2_immobilier_antony_S1_2025)
 **Prédire l'avenir** - Modèles statistiques et outils d'aide à la décision
 
 ---
@@ -98,15 +98,15 @@ Pendant COVID (2020-2021) : 6 160 €/m²
 
 | Phase        | Lien Direct |
 |--------------|-------------|
-| ** Phase 1** | [Voir Rapport 2017-2021](https://github.com/dfatoumata/projet_antony_portfolio/blob/c1b167e6440eab20bc7a9997146e977db2ba9312/partie2_immobilier_antony_S1_2025/Rapport_antonye_fatoumata.html) |
-| ** Phase 2** | [Voir Rapport S1 2025](https://github.com/dfatoumata/projet_antony_portfolio/blob/c1b167e6440eab20bc7a9997146e977db2ba9312/partie1_situation_globale_2017_2021/Rapport_Antony_Commune.qmd)     |        
+| ** Phase 1** | [Voir Rapport 2017-2021](https://dfatoumata.github.io/projet_antony_portfolio/partie1_situation_globale_2017_2021/Rapport_Antony_Commune.html) |
+| ** Phase 2** | [Voir Rapport S1 2025](https://dfatoumata.github.io/projet_antony_portfolio/partie2_immobilier_antony_S1_2025/Rapport_antonye_fatoumata.html)     |        
 
 ### Documentation Détaillée
 
 | Phase       | README                                                              | Contenu                                    |
 |-------------|---------------------------------------------------------------------|--------------------------------------------|
-| **Phase 1** | [README_partie1.md](https://github.com/dfatoumata/projet_antony_portfolio/blob/c1b167e6440eab20bc7a9997146e977db2ba9312/partie1_situation_globale_2017_2021/Rapport_Antony_Commune.html)| Méthodologie, résultats, insights Phase 1  |
-| **Phase 2** | [README_partie2.md](https://github.com/dfatoumata/projet_antony_portfolio/blob/c1b167e6440eab20bc7a9997146e977db2ba9312/partie2_immobilier_antony_S1_2025/Rapport_antonye_fatoumata.html)  | Modèles, formules, recommandations Phase 2 |
+| **Phase 1** | [README_partie1.md](https://github.com/dfatoumata/projet_antony_portfolio/blob/main/partie1_situation_globale_2017_2021/README_projet1.md)| Méthodologie, résultats, insights Phase 1  |
+| **Phase 2** | [README_partie2.md](https://github.com/dfatoumata/projet_antony_portfolio/blob/main/partie2_immobilier_antony_S1_2025/README_projet2.md)  | Modèles, formules, recommandations Phase 2 |
 
 ---
 
