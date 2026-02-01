@@ -1,6 +1,6 @@
 #  Analyse Complète du Marché Immobilier d'Antony (2017-2025) 
 
-> Étude longitudinale en 2 phases du marché immobilier d'Antony (92) avec modélisation prédictive - Projet Portfolio Data Analyst
+> Étude longitudinale en 2 phases du marché immobilier d'Antony (92) avec modélisation prédictive - Projet Portfolio
 ---
 
 ##  Vue d'Ensemble du Projet
@@ -98,15 +98,15 @@ Pendant COVID (2020-2021) : 6 160 €/m²
 
 | Phase        | Lien Direct |
 |--------------|-------------|
-| ** Phase 1** | [Voir Rapport 2017-2021](https://VOTRE-USERNAME.github.io/antony-immobilier-portfolio/projet1-analyse-2017-2021/rapport_2017-2021.html) |
-| ** Phase 2** | [Voir Rapport S1 2025](https://VOTRE-USERNAME.github.io/antony-immobilier-portfolio/projet2-analyse-2025/rapport_2025.html)             | 
+| ** Phase 1** | [Voir Rapport 2017-2021](https://github.com/dfatoumata/projet_antony_portfolio/blob/c1b167e6440eab20bc7a9997146e977db2ba9312/partie2_immobilier_antony_S1_2025/Rapport_antonye_fatoumata.html) |
+| ** Phase 2** | [Voir Rapport S1 2025](https://github.com/dfatoumata/projet_antony_portfolio/blob/c1b167e6440eab20bc7a9997146e977db2ba9312/partie1_situation_globale_2017_2021/Rapport_Antony_Commune.qmd)     |        
 
 ### Documentation Détaillée
 
 | Phase       | README                                                              | Contenu                                    |
 |-------------|---------------------------------------------------------------------|--------------------------------------------|
-| **Phase 1** | [README_partie1.md](projet_antony\partie2_immobilier_antony_S1_2025)| Méthodologie, résultats, insights Phase 1  |
-| **Phase 2** | [README_partie2.md](projet2-analyse-2025/README_projet2.md)         | Modèles, formules, recommandations Phase 2 |
+| **Phase 1** | [README_partie1.md](https://github.com/dfatoumata/projet_antony_portfolio/blob/c1b167e6440eab20bc7a9997146e977db2ba9312/partie1_situation_globale_2017_2021/README_projet1.md)| Méthodologie, résultats, insights Phase 1  |
+| **Phase 2** | [README_partie2.md](https://github.com/dfatoumata/projet_antony_portfolio/blob/c1b167e6440eab20bc7a9997146e977db2ba9312/partie2_immobilier_antony_S1_2025/README_projet2.md)  | Modèles, formules, recommandations Phase 2 |
 
 ---
 
