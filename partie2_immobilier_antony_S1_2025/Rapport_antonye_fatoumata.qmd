@@ -957,6 +957,7 @@ Ce rapport a démontré la puissance de l'analyse statistique appliquée à l'im
 
 Ces outils statistiques constituent une **aide à la décision objective** pour nos conseillers et un **argument de crédibilité** face à nos clients, tout en gardant à l'esprit que l'expertise humaine reste indispensable pour capter les subtilités de chaque bien et de chaque transaction.
 
+[Simulateur Antony](https://fatoumatadiallo2004.shinyapps.io/antony/)
 
 
 
