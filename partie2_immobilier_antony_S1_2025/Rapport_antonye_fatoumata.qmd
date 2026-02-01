@@ -1,0 +1,964 @@
+---
+title: "Evolution récentes de l'immobilier dans la commune de Antony (1er semestre 2025)"
+subtitle: "Rapport confidentiel pour Margherita Piazza"  
+author: "DIALLO FATOUMATA"
+date: "2025-11-25"
+format: 
+  html:
+    embed-resources: true
+    echo: false
+---
+
+
+
+
+### Objectifs 
+
+La présidente directrice générale de l'agence immobilière Piazza Margherita vous propose un nouveau défi : réaliser une étude statistique à finalité opérationnelle visant à sélectionner facilement les annonces en fonction des demandes des clients et de leurs capacités financières. L'étude portera uniquement sur le premier semestre 2025 et comportera donc un petit échantillon de ventes ayant eu lieu récemment dans votre commune (Source : Demandes de valeurs foncières, Etalab, 2025).
+
+
+```{r}
+# Chargement de la base de données
+base<-readRDS("data/DVF2025_S1.RDS")
+
+# Sélection de votre commune
+don<-base[base$com_code ==92002,]
+
+#table(base$com_nom)
+```
+
+
+
+
+![](logo.jpg){width=300 fig-align="center"}
+
+## A. Antony
+
+
+
+> Présentez rapidement la situation de l'immobilier dans la  commune au premier semestrre 2025 (nombre de biens vendus, types de biens, prix, surface, etc. )
+
+
+```{r  echo=FALSE, results='hide'}
+summary(don)
+
+# Nombre total de ventes
+n_total <- nrow(don)
+
+# Répartition par type
+table_type <- table(don$type)
+prop_type <- prop.table(table_type) * 100
+
+# Statistiques sur les prix
+prix_stats <- summary(don$prix)
+prix_median <- median(don$prix)
+prix_moyen <- mean(don$prix)
+prix_sd <- sd(don$prix)
+
+# Statistiques sur les superficies
+sup_stats <- summary(don$sup)
+sup_median <- median(don$sup)
+sup_moyen <- mean(don$sup)
+
+# Statistiques sur le nombre de pièces
+nbp_stats <- summary(don$nbp)
+nbp_median <- median(don$nbp)
+nbp_moyen <- mean(don$nbp)
+
+# Prix au m²
+don$prix_m2 <- don$prix / don$sup
+prix_m2_moyen <- mean(don$prix_m2)
+prix_m2_median <- median(don$prix_m2)
+
+# STATISTIQUES PAR TYPE DE BIEN
+
+# Appartements
+don_appart <- don[don$type == "Appartement", ]
+prix_moyen_appart <- mean(don_appart$prix)
+sup_moyen_appart <- mean(don_appart$sup)
+nbp_moyen_appart <- mean(don_appart$nbp)
+prix_m2_moyen_appart <- mean(don_appart$prix_m2)
+
+# Maisons
+don_maison <- don[don$type == "Maison", ]
+prix_moyen_maison <- mean(don_maison$prix)
+sup_moyen_maison <- mean(don_maison$sup)
+nbp_moyen_maison <- mean(don_maison$nbp)
+prix_m2_moyen_maison <- mean(don_maison$prix_m2)
+
+
+# VISUALISATIONS
+
+# 1. Répartition par type
+barplot(table_type,
+        main = "Répartition des ventes par type",
+        ylab = "Nombre de ventes",
+        col = c("steelblue", "coral"),
+        ylim = c(0, max(table_type) * 1.2))
+text(x = c(0.7, 1.9), 
+     y = table_type + 10, 
+     labels = paste0(round(prop_type, 1), "%"),
+     font = 2)
+
+# 2. Distribution des prix
+hist(don$prix / 1000,
+     breaks = 20,
+     main = "Distribution des prix",
+     xlab = "Prix (milliers €)",
+     ylab = "Fréquence",
+     col = "lightblue",
+     border = "white")
+abline(v = prix_median / 1000, col = "red", lwd = 2, lty = 2)
+legend("topright", legend = "Médiane", col = "red", lty = 2, lwd = 2)
+
+# 3. Distribution des superficies
+hist(don$sup,
+     breaks = 20,
+     main = "Distribution des superficies",
+     xlab = "Superficie (m²)",
+     ylab = "Fréquence",
+     col = "lightgreen",
+     border = "white")
+abline(v = sup_median, col = "red", lwd = 2, lty = 2)
+
+# 4. Répartition par nombre de pièces
+barplot(table(don$nbp),
+        main = "Répartition par nombre de pièces",
+        xlab = "Nombre de pièces",
+        ylab = "Nombre de ventes",
+        col = rainbow(length(table(don$nbp))))
+
+
+
+# GRAPHIQUE PRIX PAR TYPE
+
+
+boxplot(prix / 1000 ~ type, 
+        data = don,
+        main = "Comparaison des prix par type de bien",
+        xlab = "Type de bien",
+        ylab = "Prix (milliers €)",
+        col = c("steelblue", "coral"),
+        outline = TRUE)
+
+# Ajout des moyennes
+moyennes <- tapply(don$prix / 1000, don$type, mean)
+points(1:2, moyennes, pch = 18, col = "red", cex = 2)
+legend("topleft", legend = "Moyenne", pch = 18, col = "red", pt.cex = 2)
+```
+
+Le marché immobilier d'Antony au premier semestre 2025 affiche une activité modérée avec 270 transactions enregistrées dans la base DVF. Le marché se caractérise par une nette prédominance des appartements, qui représentent 72% des ventes (194 transactions), contre 28% pour les maisons (76 transactions). Cette répartition reflète la structure urbaine dense de la commune et confirme la tendance observée les années précédentes.
+
+L'analyse des prix révèle un marché à deux vitesses. Le prix médian global s'établit à 380 000 €. Les appartements affichent un prix moyen de 340312.6 €, tandis que les maisons atteignent en moyenne 606520.1 €, soit un écart substantiel qui témoigne de la rareté et de la valorisation des biens individuels dans cette commune prisée de la petite couronne.
+
+Les superficies médianes se situent à 71 m², avec des biens comportant en moyenne 3,4 pièces. Le marché se concentre principalement sur les logements de taille moyenne, adaptés aux besoins des familles comme des jeunes actifs. La fourchette de prix s'étend de 76 500 € (sans doute un studio) à 1 345 000 € (probablement une maison d'exception), illustrant la diversité de l'offre immobilière antonienne.
+
+Le prix au m² moyen de  €/m² confirme le positionnement haut de gamme d'Antony dans le paysage francilien. Ce niveau de valorisation s'explique par l'excellente desserte en transports (RER B), la qualité du cadre de vie et la proximité avec Paris.
+
+Cette première analyse pose le cadre pour les études approfondies qui suivent, visant à construire des outils opérationnels d'aide à la décision pour nos équipes commerciales et nos clients.
+
+
+
+
+
+## B. PRIX EN FONCTION DU NOMBRE DE PIECES
+
+Notre compagnie souhaite déterminer facilement le type de logement que l'on proposera à un client en fonction du prix que ce client est prêt à payer. On classe les logements en trois types de besoins selon le nombre de pièces.
+
+### B.1 Cas des petits logements de 1 ou 2 pièces 
+
+> Nous avons étudié le marché des petits logements (1-2 pièces) à Antony afin d’identifier les tendances de prix selon le type de bien.
+
+```{r  echo=FALSE, results='hide'}
+# SÉLECTION DES PETITS LOGEMENTS
+
+
+# Filtrage : 1 ou 2 pièces
+petits <- don[don$nbp <= 2, ]
+petits
+
+# Répartition par type
+table_petits <- table(petits$type)
+table_petits
+
+# Séparation par type
+petits_appart <- petits[petits$type == "Appartement", ]
+petits_maison <- petits[petits$type == "Maison", ]
+petits_maison
+
+# Prix typiques - Appartements
+median(petits_appart$prix)
+quantile(petits_appart$prix, c(0.25, 0.75))
+
+# Prix typiques - Maisons (si données suffisantes)
+median(petits_maison$prix)
+
+# Différence de prix moyen
+mean(petits_maison$prix) - mean(petits_appart$prix)
+```
+
+**Volume de marché :** Sur les 270 ventes, 57 concernent des petits logements (21% du marché), dont 55 appartements et seulement 2 maisons.
+
+**Prix des appartements :** Le prix typique est de **198 000 €** (médiane). La moitié des transactions se situent entre 163 000 € et 265 000 €, allant du studio à 76 500 € jusqu'à des 2 pièces premium à 535 000 €.
+
+**Prix des maisons :** Les 2 maisons vendues affichent un prix de 502 000 €, soit un surcoût de 280 000 € (+154%) par rapport aux appartements. Attention : avec seulement 2 ventes, ce chiffre n'est pas représentatif d'une tendance de marché.
+
+**Différence significative :** L'effectif de maisons est trop faible (n=2) pour réaliser un test statistique fiable. L'écart observé reflète probablement les caractéristiques particulières de ces 2 biens plutôt qu'une règle générale.
+
+**Recommandation :** Pour un client cherchant un petit logement, orienter systématiquement vers les appartements (budget 150-250k€ pour le cœur de marché). Les maisons de cette taille sont quasi inexistantes et relèvent de l'opportunité ponctuelle.
+
+
+
+
+
+
+
+### B.2 Cas logements standard de 3 ou 4 pièces 
+
+
+```{r  echo=FALSE, results='hide'}
+# Filtrage : 3 ou 4 pièces
+standard <- don[don$nbp >= 3 & don$nbp <= 4, ]
+
+# Répartition par type
+table(standard$type)
+
+# Séparation par type
+standard_appart <- standard[standard$type == "Appartement", ]
+standard_maison <- standard[standard$type == "Maison", ]
+
+# Statistiques appartements
+nrow(standard_appart)
+summary(standard_appart$prix)
+sd(standard_appart$prix)
+
+# Statistiques maisons
+nrow(standard_maison)
+summary(standard_maison$prix)
+sd(standard_maison$prix)
+
+# Visualisation
+boxplot(prix / 1000 ~ type,
+        data = standard,
+        main = "Prix des logements standard (3-4 pièces)",
+        xlab = "Type de bien",
+        ylab = "Prix (milliers €)",
+        col = c("steelblue", "coral"))
+
+moyennes_standard <- tapply(standard$prix / 1000, standard$type, mean)
+points(1:2, moyennes_standard, pch = 18, col = "red", cex = 2)
+legend("topleft", legend = "Moyenne", pch = 18, col = "red", pt.cex = 2)
+
+# Test statistique
+t.test(prix ~ type, data = standard)
+wilcox.test(prix ~ type, data = standard)
+
+# Prix typiques - Appartements
+median(standard_appart$prix)
+quantile(standard_appart$prix, c(0.25, 0.75))
+
+# Prix typiques - Maisons
+median(standard_maison$prix)
+quantile(standard_maison$prix, c(0.25, 0.75))
+
+# Différence
+mean(standard_maison$prix) - mean(standard_appart$prix)
+
+```
+
+Volume de marché : Les logements de 3-4 pièces représentent le cœur du marché antonien avec 160 transactions sur 270, soit 59% des ventes. Ce segment se répartit entre 122 appartements (76%) et 38 maisons (24%), confirmant une offre diversifiée pour cette typologie familiale prisée.
+
+**Prix des appartements** : Un appartement de 3-4 pièces se vend typiquement 359 000 € (médiane). La moitié des transactions se concentre entre 261 000 € et 482 000 €. Ces biens correspondent généralement à des surfaces de 60 à 85 m², adaptées aux jeunes couples avec enfants ou aux familles recherchant un premier achat spacieux.
+
+**Prix des maisons** : Les maisons de 3-4 pièces affichent un prix médian de 530 000 €, soit un surcoût de 171 000 € (+48%) par rapport aux appartements de même configuration. La fourchette typique s'étend de 427 000 € à 626 000 €. Cet écart s'explique par la présence d'un jardin, d'une superficie habitable plus généreuse, et de la rareté relative de ce type de bien.
+Différence significative : Les tests statistiques confirment que l'écart de prix est très hautement significatif (p < 0,001). Cette différence n'est donc pas due au hasard : à nombre de pièces égal, les maisons sont structurellement et systématiquement plus chères que les appartements. L'intervalle de confiance situe cette différence entre 104 000 € et 212 000 €.
+**Recommandation pour l'agence** :
+
+Budget 250-400k€ : Orienter vers des appartements 3-4 pièces, segment avec l'offre la plus abondante (122 biens disponibles)
+Budget 400-550k€ : Zone de transition où les deux options coexistent - privilégier les appartements haut de gamme ou les maisons d'entrée de gamme selon les priorités du client (jardin vs centralité)
+Budget > 550k€ : Privilégier les maisons 3-4 pièces qui offrent un meilleur rapport qualité/espace dans cette gamme
+
+Ce segment représente notre zone de confort commerciale : effectifs importants, fourchettes de prix bien établies, clientèle familiale stable et fidélisante. C'est le marché le plus liquide d'Antony.
+
+### B.3 Cas des grands logements de 5 pièces ou plus
+
+> Afin d’évaluer les tendances du marché pour les grands logements (5 pièces et plus), nous avons comparé les prix selon le type de bien.
+
+```{r  echo=FALSE, results='hide'}
+# Filtrage : 5 pièces ou plus
+grands <- don[don$nbp >= 5, ]
+
+# Répartition par type
+table(grands$type)
+
+# Séparation par type
+grands_appart <- grands[grands$type == "Appartement", ]
+grands_maison <- grands[grands$type == "Maison", ]
+
+# Statistiques appartements
+nrow(grands_appart)
+summary(grands_appart$prix)
+sd(grands_appart$prix)
+
+# Statistiques maisons
+nrow(grands_maison)
+summary(grands_maison$prix)
+sd(grands_maison$prix)
+
+# Visualisation
+boxplot(prix / 1000 ~ type,
+        data = grands,
+        main = "Prix des grands logements (5+ pièces)",
+        xlab = "Type de bien",
+        ylab = "Prix (milliers €)",
+        col = c("steelblue", "coral"))
+
+moyennes_grands <- tapply(grands$prix / 1000, grands$type, mean)
+points(1:2, moyennes_grands, pch = 18, col = "red", cex = 2)
+legend("topleft", legend = "Moyenne", pch = 18, col = "red", pt.cex = 2)
+
+# Test statistique
+t.test(prix ~ type, data = grands)
+wilcox.test(prix ~ type, data = grands)
+
+# Prix typiques - Appartements
+median(grands_appart$prix)
+quantile(grands_appart$prix, c(0.25, 0.75))
+
+# Prix typiques - Maisons
+median(grands_maison$prix)
+quantile(grands_maison$prix, c(0.25, 0.75))
+
+# Différence
+mean(grands_maison$prix) - mean(grands_appart$prix)
+```
+
+Volume de marché : Les grands logements de 5 pièces ou plus représentent 53 transactions, soit 20% du marché antonien - un segment substantiel qui témoigne de l'attractivité de la commune pour les familles aisées. Cette catégorie haut de gamme se compose de 17 appartements (32%) et 36 maisons (68%), marquant une inversion nette par rapport aux segments précédents : ici, les maisons dominent largement l'offre.
+**Prix des appartements**: Le prix typique d'un grand appartement s'établit à 430 000 € (médiane). La fourchette courante s'étend de 255 000 € à 594 000 €, avec un maximum à 990 000 € pour les biens d'exception. Ces grands appartements correspondent généralement à des surfaces de 90 à 130 m², destinés aux familles nombreuses ou aisées recherchant de l'espace tout en conservant les avantages du collectif (charges, entretien, sécurité).
+**Prix des maisons** : Les maisons de 5+ pièces affichent un prix médian de 653 000 €, soit un surcoût de 223 000 € (+52%) par rapport aux appartements. La fourchette typique va de 531 000 € à 863 000 €, culminant à 1 345 000 € pour les propriétés d'exception. Ces maisons représentent le fleuron du marché antonien : grandes surfaces habitables (110-180 m²), jardins généreux, standing élevé.
+**Différence significative** : Les tests statistiques confirment que l'écart de prix est très significatif (p = 0,006). Dans ce segment, les maisons coûtent en moyenne 212 000 € de plus que les appartements. L'intervalle de confiance situe cette différence entre 65 000 € et 360 000 €, confirmant un écart robuste et systématique. Cette prime reflète non seulement l'espace extérieur mais aussi le prestige de ces biens.
+
+*Recommandation pour l'agence *:
+
+Budget 250-500k€ : Grands appartements exclusivement - offre limitée (17 biens seulement) s'adressant à une clientèle urbaine aisée privilégiant la praticité
+Budget 500-650k€ : Zone de transition où coexistent appartements haut de gamme et maisons d'entrée de gamme - arbitrage selon mode de vie (praticité vs jardin)
+Budget > 650k€ : Privilégier les maisons qui dominent ce segment (36 biens) et offrent le meilleur rapport qualité/standing/espace pour les grandes familles
+
+
+
+
+### B.4 Synthèse
+
+> Tableau indiquant le nombre de pièces que peut espérer trouver un acheteur en fonction du type de logement choisi et de la somme qu'il est prêt à dépenser.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Construction du tableau de synthèse
+# Lignes = Tranches de budget
+# Colonnes = Type de bien et nombre de pièces
+
+# Récapitulatif des prix médians
+recap <- data.frame(
+  Taille = c("Petits (1-2p)", "Standard (3-4p)", "Grands (5+p)"),
+  
+  Appart_N = c(
+    nrow(petits_appart),
+    nrow(standard_appart),
+    nrow(grands_appart)
+  ),
+  
+  Appart_Median = c(
+    median(petits_appart$prix),
+    median(standard_appart$prix),
+    median(grands_appart$prix)
+  ),
+  
+  Appart_Q1_Q3 = c(
+    paste0(round(quantile(petits_appart$prix, 0.25)/1000), "-", 
+           round(quantile(petits_appart$prix, 0.75)/1000), "k"),
+    paste0(round(quantile(standard_appart$prix, 0.25)/1000), "-", 
+           round(quantile(standard_appart$prix, 0.75)/1000), "k"),
+    paste0(round(quantile(grands_appart$prix, 0.25)/1000), "-", 
+           round(quantile(grands_appart$prix, 0.75)/1000), "k")
+  ),
+  
+  Maison_N = c(
+    nrow(petits_maison),
+    nrow(standard_maison),
+    nrow(grands_maison)
+  ),
+  
+  Maison_Median = c(
+    ifelse(nrow(petits_maison) >= 3, median(petits_maison$prix), NA),
+    median(standard_maison$prix),
+    median(grands_maison$prix)
+  ),
+  
+  Maison_Q1_Q3 = c(
+    ifelse(nrow(petits_maison) >= 3, 
+           paste0(round(quantile(petits_maison$prix, 0.25)/1000), "-", 
+                  round(quantile(petits_maison$prix, 0.75)/1000), "k"),
+           "Données insuf."),
+    paste0(round(quantile(standard_maison$prix, 0.25)/1000), "-", 
+           round(quantile(standard_maison$prix, 0.75)/1000), "k"),
+    paste0(round(quantile(grands_maison$prix, 0.25)/1000), "-", 
+           round(quantile(grands_maison$prix, 0.75)/1000), "k")
+  )
+)
+
+# Formatage des prix médians
+recap$Appart_Median <- paste0(round(recap$Appart_Median/1000), "k€")
+recap$Maison_Median <- ifelse(is.na(recap$Maison_Median), 
+                               "Données insuf.",
+                               paste0(round(recap$Maison_Median/1000), "k€"))
+
+# Affichage
+knitr::kable(recap,
+             col.names = c("Taille logement", 
+                          "N", "Médiane", "Fourchette Q1-Q3",
+                          "N", "Médiane", "Fourchette Q1-Q3"),
+             align = c("l", "r", "r", "r", "r", "r", "r"),
+             caption = "Guide des prix par type et taille de logement")
+# Tableau orienté BUDGET CLIENT
+# Plus opérationnel pour les conseillers
+
+guide_budget <- data.frame(
+  Budget = c(
+    "< 200k€",
+    "200-300k€",
+    "300-400k€",
+    "400-500k€",
+    "500-650k€",
+    "650-850k€",
+    "> 850k€"
+  ),
+  
+  Appartements = c(
+    "1-2p (rares)",
+    "1-2p (courant)",
+    "3-4p (entrée)",
+    "3-4p (courant), 5+p (rares)",
+    "3-4p (premium), 5+p (courant)",
+    "5+p (premium)",
+    "5+p (exception)"
+  ),
+  
+  Maisons = c(
+    "Quasi inexistant",
+    "Quasi inexistant",
+    "Rares opportunités",
+    "3-4p (entrée)",
+    "3-4p (courant)",
+    "3-4p (premium), 5+p (courant)",
+    "5+p (premium)"
+  ),
+  
+  Conseil = c(
+    "Orienter vers appartements 1-2p",
+    "Appartements 1-2p ou petits 3p",
+    "Appartements 3-4p - offre large",
+    "Choix entre appart 4p ou maison 3p",
+    "Zone de transition - 2 options viables",
+    "Privilégier maisons - meilleur rapport",
+    "Segment premium - maisons dominantes"
+  )
+)
+
+knitr::kable(guide_budget,
+             align = c("l", "l", "l", "l"),
+             caption = "Guide opérationnel budget-client (S1 2025)")
+```
+
+
+
+**Enseignements clés pour l'agence :**
+
+**Segmentation du marché :**
+- **Petits logements (1-2p)** : Marché d'appartements (55 sur 57), prix médian 198k€
+- **Logements standard (3-4p)** : Cœur de marché (160 ventes), forte présence d'appartements (122) et disponibilité de maisons (38)
+- **Grands logements (5+p)** : Segment premium (53 ventes) dominé par les maisons (36 vs 17)
+
+**Progression des prix :**
+- Les prix médians augmentent logiquement avec la taille : 198k€ → 359k€ → 430k€ (appartements)
+- L'écart maisons/appartements s'amplifie avec la taille : inexistant (1-2p) → +48% (3-4p) → +52% (5+p)
+
+**Points d'attention opérationnels :**
+- **Ne pas promettre de maisons 1-2 pièces** : seulement 2 ventes sur le semestre (offre quasi-nulle)
+- **Budget 300-500k€** : Zone de forte activité commerciale avec maximum de choix
+- **Budget > 650k€** : Basculer systématiquement vers les maisons (meilleur produit disponible)
+
+
+## C. Prévision de la surface en fonction du budget client
+
+L’objectif est de développer un modèle statistique permettant d’estimer la surface d’un logement selon le budget de l’acheteur, en tenant compte du type de bien (maison ou appartement). Ce modèle sert à guider les recommandations commerciales et à améliorer la prise de décision pour nos clients.
+
+
+### C.1 Cas des maisons 
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+# Sélection des maisons uniquement
+maisons <- don[don$type == "Maison", ]
+# Nombre de maisons
+nrow(maisons)
+# Statistiques descriptives
+summary(maisons$prix)
+summary(maisons$sup)
+# Visualisation de la relation
+plot(maisons$prix / 1000, maisons$sup,
+     main = "Relation Prix-Surface pour les maisons",
+     xlab = "Prix (milliers €)",
+     ylab = "Surface (m²)",
+     pch = 19,
+     col = rgb(1, 0, 0, 0.5),
+     cex = 1.2)
+# Ajout des moyennes
+abline(h = mean(maisons$sup), col = "blue", lty = 2)
+abline(v = mean(maisons$prix / 1000), col = "blue", lty = 2)
+# Modèle de régression : Surface (Y) en fonction du Prix (X)
+modele_maison <- lm(sup ~ prix, data = maisons)
+# Ajout de la droite de régression
+abline(modele_maison, col = "red", lwd = 2)
+```
+```{r echo=FALSE, include=FALSE}
+# Résultats du modèle
+summary(modele_maison)
+# Coefficient de détermination
+summary(modele_maison)$r.squared
+# Équation du modèle
+coef(modele_maison)
+# Diagnostics du modèle
+par(mfrow = c(2, 2))
+plot(modele_maison)
+par(mfrow = c(1, 1))
+# Tests de corrélation
+cor(maisons$prix, maisons$sup)
+cor(maisons$prix, maisons$sup, method = "spearman")
+cor.test(maisons$prix, maisons$sup)
+cor.test(maisons$prix, maisons$sup, method= "spearman")
+```
+
+
+**Équation du modèle :**
+*Surface* = 31,5 + 0,000119 × Prix ( en milliers €)
+
+**Qualité du modèle :**
+
+R² = 0,345 (34,5%) : Le prix explique environ un tiers de la variance de la surface des maisons. Ce pouvoir prédictif modéré signifie que d'autres facteurs influencent fortement la surface (terrain, configuration, nombre d'étages, emplacement).
+*Corrélation de Pearson* = 0,587 : Relation positive et modérée entre prix et surface. *La corrélation de Spearman* (0,499) est légèrement plus faible, suggérant une relation pas *parfaitement linéaire*.
+*Significativité* (p < 0,001) : La relation est très hautement significative. Malgré un R² modéré, le lien prix-surface existe bel et bien et n'est pas dû au hasard.
+
+Chaque tranche de 100 000 € permet d'obtenir environ 12 m² supplémentaires (0,000119 × 100 000 = 11,9 m²). Ce ratio reflète le marché antonien des maisons où 1 m² "coûte" approximativement 8 400 € en moyenne (100 000 / 12).
+**Limites du modèle :**
+L'écart-type résiduel de 36,5 m² indique une forte variabilité autour de la prédiction. Deux maisons au même prix peuvent avoir des surfaces très différentes selon :
+
+La taille du terrain (une petite maison sur grand terrain vs grande maison sur petit terrain)
+Le nombre d'étages (plain-pied vs R+1)
+L'état et le standing (maison ancienne spacieuse vs récente compacte mais premium)
+La localisation précise dans la commune
+
+
+> Application du modèle au cas d'un client qui dispose de 600 000 €.
+
+```{r  echo=FALSE, results='hide'}
+# Application : Client avec 600 000 €
+nouveau_client <- data.frame(prix = 600000)
+prediction <- predict(modele_maison, 
+                     newdata = nouveau_client,
+                     interval = "confidence",
+                     level = 0.95)
+prediction
+
+# Affichage formaté
+round(prediction)
+```
+**Prédiction pour un budget de 600 000 € :**
+
+Surface prévue : 103 m²
+Intervalle de confiance à 95% : [95 - 111 m²]
+
+*Conseil au client* :
+Avec un budget de 600k€,  la fourchette réaliste s'étend de 95 à 111 m², car la surface dépend fortement de facteurs que le prix seul ne capte pas.
+
+*Recommandations pour maximiser la surface :*
+Privilégier les quartiers légèrement moins centraux
+Accepter des travaux de rénovation (maisons anciennes souvent plus spacieuses)
+Considérer les maisons plain-pied sur terrain modeste (plus de surface habitable que de terrain)
+
+
+
+### C.2 Cas des appartements 
+
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+# Sélection des appartements uniquement
+appartements <- don[don$type == "Appartement", ]
+# Nombre d'appartements
+nrow(appartements)
+# Statistiques descriptives
+summary(appartements$prix)
+summary(appartements$sup)
+# Visualisation de la relation
+plot(appartements$prix / 1000, appartements$sup,
+     main = "Relation Prix-Surface pour les appartements",
+     xlab = "Prix (milliers €)",
+     ylab = "Surface (m²)",
+     pch = 19,
+     col = rgb(0, 0, 1, 0.5),
+     cex = 1.2)
+# Ajout des moyennes
+abline(h = mean(appartements$sup), col = "blue", lty = 2)
+abline(v = mean(appartements$prix / 1000), col = "blue", lty = 2)
+# Modèle de régression : Surface (Y) en fonction du Prix (X)
+modele_appart <- lm(sup ~ prix, data = appartements)
+# Ajout de la droite de régression
+abline(modele_appart, col = "red", lwd = 2)
+```
+```{r echo=FALSE, include=FALSE}
+# Résultats du modèle
+summary(modele_appart)
+# Coefficient de détermination
+summary(modele_appart)$r.squared
+# Équation du modèle
+coef(modele_appart)
+# Diagnostics du modèle
+par(mfrow = c(2, 2))
+plot(modele_appart)
+par(mfrow = c(1, 1))
+# Tests de corrélation
+cor(appartements$prix, appartements$sup)
+cor(appartements$prix, appartements$sup, method = "spearman")
+cor.test(appartements$prix, appartements$sup)
+cor.test(appartements$prix, appartements$sup, method = "spearman")
+```
+
+
+
+
+
+
+**Équation du modèle :**
+Surface = 27,8 + 0,000111 × Prix ( en milliers €)
+ 
+**Qualité du modèle :**
+
+R² = 0,596 (59,6%) : Le prix explique près de 60% de la variance de la surface des appartements. C'est un pouvoir prédictif nettement supérieur à celui des maisons (34,5%), indiquant que les appartements sont des biens plus standardisés où le prix reflète bien la surface.
+*Corrélation de Pearson* = 0,772 : Relation forte et positive entre prix et surface. La *corrélation de Spearman* (0,773) est quasi identique, confirmant une relation très linéaire et régulière.
+Significativité (p < 0,001) : La relation est extrêmement *significative*.
+
+Chaque tranche de 100 000 € permet d'obtenir environ 11 m² supplémentaires (0,000111 × 100 000 = 11,1 m²). Ce ratio est légèrement inférieur à celui des maisons (12 m²), ce qui signifie que les appartements sont proportionnellement un peu plus chers au m² que les maisons à Antony (environ 9 000 € par m² pour les appartements vs 8 400 € pour les maisons).
+*Qualité prédictive supérieure :*
+L'écart-type résiduel de seulement 14,5 m² (contre 36,5 m² pour les maisons) indique une bien meilleure précision des prédictions. Les appartements étant plus homogènes que les maisons, le prix est un excellent indicateur de la surface. Les facteurs secondaires (étage, balcon, parking) ont moins d'impact sur la surface que pour les maisons (terrain, configuration).
+
+
+> Application du  modèle au cas d'un client qui dispose de 200 000 €. 
+
+```{r echo=FALSE, results='hide'}
+# Application : Client avec 200 000 €
+nouveau_client_appart <- data.frame(prix = 200000)
+prediction_appart <- predict(modele_appart, 
+                            newdata = nouveau_client_appart,
+                            interval = "confidence",
+                            level = 0.95)
+prediction_appart
+
+# Affichage formaté
+round(prediction_appart)
+```
+**Prédiction pour un budget de 200 000 € :**
+
+Surface prévue : 50 m²
+Intervalle de confiance à 95% : [47 - 53 m²]
+
+*Conseil au client* :
+Avec un budget de 200k€, vous pouvez espérer un appartement d'environ 50 m² à Antony. La fourchette réaliste s'étend de 47 à 53 m². Ce budget correspond typiquement à :
+
+Un grand studio (35-40 m²) en excellent état et bien situé
+Un 2 pièces standard (45-55 m²) dans un immeuble classique
+Un petit 3 pièces (50-60 m²) nécessitant quelques travaux ou légèrement excentré
+
+*Recommandations pour optimiser l'achat* :
+
+Privilégier les derniers étages sans ascenseur (prix au m² plus bas)
+Accepter l'absence de parking (gain de 15-20k€ réinvestissable dans la surface)
+Comparer plusieurs quartiers : les écarts de prix peuvent offrir 5-10 m² supplémentaires
+
+
+### C.3 Conclusion
+
+```{r  echo=FALSE, results='hide'}
+# Comparaison des deux modèles
+
+# Tableau récapitulatif
+comparaison_modeles <- data.frame(
+  Type = c("Appartements", "Maisons"),
+  N = c(nrow(appartements), nrow(maisons)),
+  R_squared = c(
+    summary(modele_appart)$r.squared,
+    summary(modele_maison)$r.squared
+  ),
+  Correlation = c(
+    cor(appartements$prix, appartements$sup),
+    cor(maisons$prix, maisons$sup)
+  ),
+  Intercept = c(
+    coef(modele_appart)[1],
+    coef(modele_maison)[1]
+  ),
+  Pente = c(
+    coef(modele_appart)[2],
+    coef(modele_maison)[2]
+  ),
+  Ecart_type_residuel = c(
+    summary(modele_appart)$sigma,
+    summary(modele_maison)$sigma
+  ),
+  m2_pour_100k = c(
+    coef(modele_appart)[2] * 100000,
+    coef(modele_maison)[2] * 100000
+  )
+)
+
+# Formatage
+comparaison_modeles$R_squared <- round(comparaison_modeles$R_squared, 3)
+comparaison_modeles$Correlation <- round(comparaison_modeles$Correlation, 3)
+comparaison_modeles$Intercept <- round(comparaison_modeles$Intercept, 1)
+comparaison_modeles$Pente <- format(comparaison_modeles$Pente, scientific = FALSE)
+comparaison_modeles$Ecart_type_residuel <- round(comparaison_modeles$Ecart_type_residuel, 1)
+comparaison_modeles$m2_pour_100k <- round(comparaison_modeles$m2_pour_100k, 1)
+
+knitr::kable(comparaison_modeles,
+             col.names = c("Type", "N", "R²", "Corrélation", 
+                          "Intercept", "Pente", "Écart-type", "m²/100k€"),
+             align = c("l", "r", "r", "r", "r", "r", "r", "r"),
+             caption = "Comparaison des modèles prédictifs Surface = f(Prix)")
+
+# Visualisation comparative
+par(mfrow = c(1, 2))
+
+# Appartements
+plot(appartements$prix / 1000, appartements$sup,
+     main = "Appartements (R² = 0.60)",
+     xlab = "Prix (k€)",
+     ylab = "Surface (m²)",
+     pch = 19,
+     col = rgb(0, 0, 1, 0.4),
+     xlim = c(0, 1000),
+     ylim = c(0, 150))
+abline(modele_appart, col = "blue", lwd = 3)
+
+# Maisons
+plot(maisons$prix / 1000, maisons$sup,
+     main = "Maisons (R² = 0.34)",
+     xlab = "Prix (k€)",
+     ylab = "Surface (m²)",
+     pch = 19,
+     col = rgb(1, 0, 0, 0.4),
+     xlim = c(0, 1000),
+     ylim = c(0, 150))
+abline(modele_maison, col = "red", lwd = 3)
+
+par(mfrow = c(1, 1))
+
+```
+
+
+
+** Ce que nous apprennent ces deux modèles :**
+
+**1. Les appartements sont plus prévisibles :**
+- Avec un R² de **60% contre 34%**, le prix prédit **deux fois mieux** la surface pour les appartements que pour les maisons
+- Les appartements sont des biens **standardisés** : à prix égal, la surface varie peu
+- Les maisons sont **hétérogènes** : terrain, configuration, nombre d'étages créent une forte variabilité
+
+**2. Rendement surface/prix quasi-identique :**
+- **Appartements** : 11,1 m² par tranche de 100k€
+- **Maisons** : 11,9 m² par tranche de 100k€
+- Contrairement aux idées reçues, on n'obtient pas beaucoup plus de surface en maison pour le même prix (seulement 7% de plus)
+
+**3. Différences structurelles :**
+- **Surface de base** (intercept) : 28 m² pour les appartements vs 32 m² pour les maisons
+- **Précision** : Écart-type de 14,5 m² (appart) vs 36,5 m² (maisons) - les maisons sont 2,5× plus variables
+- **Corrélation** : 0,77 (appart) vs 0,59 (maisons) - relation prix-surface beaucoup plus forte pour les appartements
+
+**4. Implications pour le marché antonien :**
+- Le marché des appartements est **liquide et transparent** : le prix reflète bien le produit
+- Le marché des maisons est **complexe** : le prix intègre de nombreux facteurs au-delà de la surface (terrain, prestations, emplacement)
+
+> Conseils d'achat pour un ménage qui dispose de 400 000 €.
+
+```{r  echo=FALSE, results='hide'}
+# Calculs pour 400k€
+pred_400k_appart <- predict(modele_appart, 
+                           newdata = data.frame(prix = 400000),
+                           interval = "confidence")
+pred_400k_maison <- predict(modele_maison, 
+                           newdata = data.frame(prix = 400000),
+                           interval = "confidence")
+
+round(pred_400k_appart)
+round(pred_400k_maison)
+```
+
+**Avec 400 000 €, vous pouvez espérer :**
+
+**Option 1 - APPARTEMENT :**
+- Surface prévue : **72 m²** [69-75 m²]
+- Profil type : 3-4 pièces dans un immeuble standard
+- Points forts : Charges réduites, entretien mutualisé, bonne prédictibilité
+- Points faibles : Pas d'espace extérieur privatif, vie en collectif
+
+**Option 2 - MAISON :**
+- Surface prévue : **79 m²** [72-86 m²]
+- Profil type : Petite maison 3-4 pièces avec jardin
+- Points forts : Jardin privatif, indépendance, potentiel d'extension
+- Points faibles : Charges et entretien élevés, forte variabilité, offre limitée
+
+**Notre recommandation :**
+
+À **400k€**, vous êtes dans une **zone charnière** où les deux options sont viables. Le choix dépend de vos priorités :
+
+**Privilégier l'APPARTEMENT si :**
+- Vous recherchez la **sécurité** : Prédiction fiable de 72 m² ± 3 m²
+- Vous valorisez la **praticité** : Pas d'entretien extérieur, copropriété gérée
+- Vous êtes **jeune actif** ou **investisseur** : Meilleure liquidité à la revente
+- Budget : Rester sous 450k€ pour maximiser le choix (122 appartements 3-4p disponibles)
+
+**Privilégier la MAISON si :**
+- Vous recherchez un **jardin** : Priorité absolue avec jeunes enfants
+- Vous acceptez l'**incertitude** : Surface entre 72 et 86 m² selon opportunités
+- Vous envisagez des **travaux/extension** : Potentiel d'évolution du bien
+- Budget : Prévoir une marge jusqu'à 500k€ pour élargir le choix (38 maisons 3-4p)
+
+**Stratégie optimale :** Visiter **les deux types de biens** pour comparer concrètement. À ce budget, l'arbitrage est **personnel** plutôt qu'économique : le rapport qualité/prix est similaire, c'est le mode de vie souhaité qui doit trancher.
+
+
+## D. Modèle de régression multiple pour la valorisation immobilière
+
+Nous avons construit un modèle de régression multiple pour estimer le prix des biens immobiliers à Antony, en fonction de trois variables principales :
+prix = a0 + a1.superficie + a2.nombre de pièces + a3.type de logement
+
+
+```{r echo=FALSE, results='hide'}
+
+modfin <- lm(prix~sup+nbp+type, data=don)
+summary(modfin)
+```
+
+### D.1 Analyse du modèle
+
+> 
+- prix minimal de base (a0) : 
+- effet de la superficie (a1) :
+- effet du nombre de pièces (a2) :
+- effet du type de logement (a3) : 
+
+
+
+**Interprétation des coefficients :**
+
+- **Prix minimal de base (a0 = 87 344 €)** : C'est le prix théorique d'un appartement de 0 m² avec 0 pièce. En pratique, ce coefficient n'a pas de sens concret (pas de bien sans surface), mais il représente la **constante du modèle** servant de point de départ au calcul.
+
+- **Effet de la superficie (a1 = 3 941 €/m²)** : Chaque mètre carré supplémentaire augmente le prix de **3 941 €**, toutes choses égales par ailleurs (même nombre de pièces, même type de bien). C'est le **prix unitaire du m²** dans le modèle.
+
+- **Effet du nombre de pièces (a2 = -1 843 €)** : Coefficient **non significatif** (p = 0,88). Le nombre de pièces n'apporte **aucune information supplémentaire** une fois qu'on connaît déjà la superficie. Cela signifie que le découpage en pièces n'influence pas le prix indépendamment de la surface totale. C'est logique : ce qui compte, c'est la surface, pas comment elle est divisée.
+
+- **Effet du type de logement (a3 = 118 504 €)** : À surface et nombre de pièces égaux, une **maison coûte 118 500 € de plus** qu'un appartement. Cette prime maison reflète la valeur du terrain, du jardin, et de l'indépendance du bien.
+
+**Qualité globale du modèle :**
+
+- **R² = 0,618 (61,8%)** : Le modèle explique **62% de la variance des prix**. C'est un très bon résultat pour un modèle immobilier simple à 3 variables.
+- **F-statistic (p < 0,001)** : Le modèle est **globalement très significatif**
+- Les variables **superficie** et **type** sont très significatives (***), mais **nbp** ne l'est pas
+
+
+
+### D.2 Exemple de prévision
+
+> Selon ce modèle le prix d'une maison de 100 m2 comportant 4 pièces ?
+
+```{r echo=FALSE, results='hide'}
+# Prédiction pour une maison de 100 m², 4 pièces
+nouveau_bien <- data.frame(
+  sup = 100,
+  nbp = 4,
+  type = "Maison"
+)
+
+prediction_finale <- predict(modfin, 
+                             newdata = nouveau_bien,
+                             interval = "confidence")
+prediction_finale
+round(prediction_finale)
+```
+**Calcul manuel :**
+
+Prix = 87 344 + (3 941 × 100) + (-1 843 × 4) + 118 504
+
+
+
+**Prix = 592 576 €** (arrondi à **593 000 €**)
+
+
+Le modèle prédit un prix d'environ **593 000 €** pour une maison de 100 m² et 4 pièces à Antony. 
+
+Cette prévision est cohérente avec les observations du marché :
+- Prix médian des maisons 3-4p : 530 000 € (notre bien est un peu plus grand)
+- Prix médian des maisons 5+p : 653 000 € (notre bien est un peu plus petit)
+- Une maison de 100 m² se situe logiquement entre ces deux segments
+
+
+
+
+### D.3 Variables supplémentaires pour améliorer le modèle
+
+Le modèle actuel prend en compte la superficie, le nombre de pièces et le type de logement. Pour améliorer sa qualité prédictive et mieux expliquer la variation des prix, d’autres variables pourraient être intégrées :
+
+**Variables disponibles dans la base DVF :**
+1. **Distance à la gare (dist_gare)** : Nos analyses ont montré une légère influence sur le prix au m². L'ajouter pourrait capter l'effet localisation.
+
+2. **Coordonnées géographiques (X, Y)** : Permettraient de distinguer les quartiers premium des quartiers moins valorisés au sein d'Antony.
+
+**Variables non disponibles mais pertinentes :**
+
+3. **État du bien** : Neuf / Bon état / À rénover - Impact majeur sur le prix 
+
+4. **Année de construction** : Les biens récents (< 10 ans) se vendent plus cher
+
+5. **Étage (pour appartements)** : Dernier étage avec vue = premium / RDC = décote
+
+6. **Présence d'un ascenseur** : Crucial pour les appartements au-dessus du 2e étage
+
+7. **Surface du terrain (pour maisons)** : Une maison de 100 m² sur 200 m² de terrain ≠ même maison sur 800 m² de terrain
+
+8. **Nombre de salles de bain/WC** : Indicateur de standing
+
+9. **Parking/Garage** : Ajoute 15-25k€ au prix à Antony
+
+10. **Balcon/Terrasse (pour appartements)** : Surface extérieure valorisée
+
+11. **Exposition** : Sud recherché, Nord décoté
+
+12. **Vue** : Dégagée vs vis-à-vis
+
+**Impact attendu :**
+
+L'ajout de ces variables pourrait faire passer le R² de **0,62 à 0,80-0,85**, capturant ainsi 80-85% de la variance des prix. Les 15-20% restants resteraient liés à des facteurs subjectifs (coup de cœur, urgence de vente, négociation) impossibles à modéliser.
+
+**Limite pratique :** Plus on ajoute de variables, plus le modèle devient précis mais complexe. Pour une utilisation opérationnelle par l'agence, le modèle actuel avec **superficie + type** (en retirant nbp qui n'apporte rien) offre un excellent compromis **simplicité/performance**.
+
+
+
+**CONCLUSION GÉNÉRALE DU RAPPORT :**
+
+Ce rapport a démontré la puissance de l'analyse statistique appliquée à l'immobilier. Les modèles développés permettent à l'agence Piazza Margherita de :
+
+*Segmenter efficacement** le marché par taille et type de bien (Partie B)
+*Prévoir les surfaces** en fonction du budget client avec une bonne fiabilité (Partie C)
+**Quantifier précisément** l'effet de chaque caractéristique sur le prix 
+
+Ces outils statistiques constituent une **aide à la décision objective** pour nos conseillers et un **argument de crédibilité** face à nos clients, tout en gardant à l'esprit que l'expertise humaine reste indispensable pour capter les subtilités de chaque bien et de chaque transaction.
+
+
+
+
+
+

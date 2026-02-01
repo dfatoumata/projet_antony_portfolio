@@ -1,0 +1,363 @@
+---
+title: "L'IMMOBILIER DANS LA COMMUNE D'ANTONY"
+subtitle: "Rapport confidentiel n°1"  
+author: "FATOUMATA DIALLO"
+date: "16/10/2025"
+format: 
+  html:
+    echo: false
+    embed-resources: true
+---
+
+```{r echo=FALSE, results='hide'}
+# Chargement de la base de données
+base<-readRDS("data/DVF.RDS")
+
+# Sélection de votre commune
+don<-base[base$com_code == 92002,]
+
+# Tri par année
+don<-don[order(don$ann),]
+
+# Affichage 
+head(don)
+tail(don)
+
+```
+
+## INTRODUCTION
+
+
+![ANTONY](image_antony.png)
+**Antony** est une commune du département des Hauts-de-Seine en région Île-de-France, située à environ 12 kilomètres au sud de Paris. Cette ville de plus de 60 000 habitants bénéficie d'une position stratégique dans la couronne parisienne, alliant les avantages de la proximité avec la capitale et la qualité de vie d'une ville à dimension humaine.
+
+La commune se caractérise par un cadre de vie agréable, marqué par d'importants espaces verts dont le parc de Sceaux qui s'étend partiellement sur son territoire. Son paysage urbain mêle harmonieusement quartiers résidentiels, zones commerciales et secteurs préservés, offrant une diversité de styles architecturaux qui témoignent de son riche patrimoine historique.
+
+Antony dispose d'une desserte exceptionnelle en transports en commun, avec notamment la station de RER B qui place le centre de Paris à moins de 20 minutes. Cette accessibilité, combinée à la présence de plusieurs établissements d'enseignement supérieur et de centres de recherche, en fait un territoire dynamique attractif pour les familles et les actifs.
+
+Le marché immobilier reflète cette attractité, avec une offre diversifiée allant des appartements en centre-ville aux maisons individuelles dans les quartiers résidentiels, répondant aux attentes d'une population aux profils variés.
+
+
+## A. SITUATION GLOBALE 2017-2021
+
+```{r echo=FALSE, results='hide'}
+
+#Changer les types
+don$com_code<- as.character(don$com_code) #Mettre com_code en character.
+don$sup<-as.numeric(don$sup)
+summary(don)
+
+base$com_code<- as.character(base$com_code) #Mettre com_code en character.
+base$sup<-as.numeric(base$sup)
+summary(base)
+```
+
+
+### A.1 Plus de maisons ou d'appartements  
+
+```{r echo=FALSE, results='hide'}
+# Comptages et proportions
+
+# Extraction de la variable
+type_bien<-don$type
+type_bien
+
+# Vérification du type
+str(type_bien)
+
+#denombrement
+tab<-table(type_bien)
+str(tab)
+
+#Calcul des portions
+prop_type <- prop.table(tab)
+prop_type
+
+# Affichage des résultats
+print(paste("Nombre de maisons vendues :", tab["Maison"]))
+print(paste("Nombre d'appartements vendus :", tab["Appartement"]))
+
+#Graphique
+barplot(tab,
+     col=c("lightblue", "lightcoral"), 
+     main= "Biens vendus",
+     xlab = "Type de vendu", 
+     ylab = "Nombre de bien vendu",
+     ylim = c(0,2500),
+     sub= "DVF (dotation de valeurs foncières)")
+
+```
+
+Les ventes immobilières à Antony entre 2017 et 2021 montrent une nette domination des appartements, qui représentent les deux tiers des transactions avec 2 389 ventes, contre 1 208 maisons vendues. Cette répartition confirme la prédominance de l'habitat collectif dans le parc immobilier de la commune, reflétant le caractère urbain et dense du marché antonien.
+
+
+### A.2 : Prix au m2 sur l'ensemble de la période
+
+```{r echo=FALSE, results='hide'}
+# Calcul du prix au m²
+don$prix_m2 <- don$prix / don$sup
+don$prix_m2
+
+#Résumé
+summary(don$prix_m2)
+sd(don$prix_m2)
+
+# Histogramme du prix au m2
+hist(don$prix_m2,
+     breaks = 30,
+     main = "Distribution des prix au m² à Antony (2017-2021)",
+     xlab = "Prix au m² (€)", 
+     ylab = "Nombre de transactions",
+     col = "lightsteelblue",
+     border = "white",
+     sub= "Source:DVF (dotation de valeurs foncières)")
+
+```
+
+L'analyse des prix au mètre carré sur la période 2017-2021 révèle que la moitié des biens immobiliers à Antony se vend à plus de 5 160 €/m². Les prix s'échelonnent de 609 €/m² pour les biens les moins chers à 17 797 €/m² pour les plus onéreux.
+
+La majorité des transactions se concentrent dans une fourchette comprise entre 4 175 €/m² et 6 269 €/m², avec un prix moyen de 5 364 €/m². Cette distribution témoigne d'un marché immobilier diversifié, allant de biens accessibles à des propriétés haut de gamme, tout en maintenant une valorisation médiane élevée caractéristique des communes résidentielles prisées.
+
+- **Minimum** : 609 €/m²
+- **1er quartile** : 4 175 €/m² (25% des biens en dessous de ce prix)
+- **Médiane** : 5 160 €/m² (la moitié des biens en dessous de ce prix)
+- **Moyenne** : 5 364 €/m²
+- **3ème quartile** : 6 269 €/m² (75% des biens en dessous de ce prix)
+- **Maximum** : 17 797 €/m²
+- **Étendue** : 17 188 €/m²
+
+
+### A.3 : Comparez le prix au m2 des maisons et des appartements
+
+```{r echo=FALSE, results='hide'}
+# Séparation des données par type de bien
+
+#STATISTIQUES DES PRIX AU M² - MAISONS 
+prix_m2_maisons <- don$prix_m2[don$type == "Maison"]
+str(prix_m2_maisons)
+summary(prix_m2_maisons)
+sd(prix_m2_maisons)
+
+##STATISTIQUES DES PRIX AU M² - APPARTEMENTS
+prix_m2_apparts <- don$prix_m2[don$type == "Appartement"]
+str(prix_m2_apparts)
+summary(prix_m2_apparts)
+sd(prix_m2_apparts)
+
+# Calcul des différences
+diff_mediane <- median(prix_m2_maisons) - median(prix_m2_apparts)
+diff_mediane
+t.test(prix_m2_maisons,prix_m2_apparts)
+
+# Boxplot comparatif
+boxplot(don$prix_m2~don$type,data=don,
+        horizontal = TRUE,
+        main = "Comparaison des prix au m²\nMaisons vs Appartements",
+        xlab = "Prix au m² (€)",
+        ylab = "Type de bien",
+        col = c("lightgreen", "lightcoral"))
+
+```
+
+L'analyse des prix au mètre carré révèle une différence marquée entre les maisons et les appartements à Antony. La moitié des maisons se vend à plus de 5 846 €/m², tandis que la moitié des appartements se vend à plus de 4 802 €/m², soit un écart de 1 044 €/m² en faveur des maisons. Cette différence représente un supplément de 21,8% pour les maisons par rapport aux appartements.
+
+La majorité des maisons se situent dans une fourchette de prix comprise entre 4 889 €/m² et 7 125 €/m², alors que les appartements se concentrent entre 3 954 €/m² et 5 836 €/m². En moyenne, les maisons atteignent 6 178 €/m² contre 4 953 €/m² pour les appartements, confirmant l'écart de valorisation entre les deux types de biens.
+
+Cette disparité de prix s'explique par plusieurs facteurs structurels. Les maisons bénéficient de la valeur ajoutée des espaces extérieurs, avec jardins et terrasses qui constituent des atouts déterminants. La recherche croissante d'espaces privatifs, accentuée depuis la crise sanitaire, renforce cette tendance. Enfin, la rareté relative des maisons dans le parc immobilier communal contribue à maintenir leur prime de valorisation.
+
+En conclusion, le marché immobilier d'Antony présente une différenciation nette entre les types de biens, les maisons bénéficiant d'une attractivité supérieure qui se traduit par une valorisation significativement plus élevée que les appartements.
+
+
+### A.4 Votre commune est-elle riche ou pauvre 
+
+```{r echo=FALSE, results='hide'}
+# Calcul du prix au m² pour tous les biens
+base$prix_m2_agence <- base$prix / base$sup
+
+# Calcul du prix médian par commune et par type
+moyennes <- aggregate(prix_m2_agence ~ com_nom + type, data = base, FUN = median, na.rm = TRUE)
+
+# T-test pour les maisons
+maison_antony <- base$prix_m2_agence[base$com_nom == "Antony" & base$type == "Maison"]
+
+maison_autres <- base$prix_m2_agence[base$com_nom != "Antony" & base$type == "Maison"]
+
+t.test(maison_antony, maison_autres)
+
+# T-test pour les appartements
+appart_antony <- base$prix_m2_agence[base$com_nom == "Antony" & base$type == "Appartement"]
+
+appart_autres <- base$prix_m2_agence[base$com_nom != "Antony" & base$type == "Appartement"]
+
+t.test(appart_antony, appart_autres)
+
+#Graphiques
+
+ ##Couleurs pour les barplots : Antony en noir, autres communes en couleur
+colors_maison <- ifelse(moyennes$com_nom[moyennes$type == "Maison"] == "Antony", "black", "skyblue")
+colors_appart <- ifelse(moyennes$com_nom[moyennes$type == "Appartement"] == "Antony", "black", "salmon")
+
+ ##Barplot Maisons
+barplot(moyennes$prix_m2_agence[moyennes$type == "Maison"],
+        names.arg = moyennes$com_nom[moyennes$type == "Maison"],
+        las = 2,
+        col = colors_maison,
+        cex.names = 0.7,
+        main = "Prix médian au m² - Maisons\n(Source : DVF 2024)",
+        ylab = "Prix (€)"
+          )
+
+ ##Barplot Appartements
+barplot(moyennes$prix_m2_agence[moyennes$type == "Appartement"],
+        names.arg = moyennes$com_nom[moyennes$type == "Appartement"],
+        las = 2,
+        col = colors_appart,
+        cex.names = 0.7,
+        main = "Prix médian au m² - Appartements\n(Source : DVF 2024)",
+        ylab = "Prix (€)"
+       )
+```
+
+Notre analyse comparative situe Antony nettement au-dessus de la moyenne des communes du réseau Piazza Margherita. Avec un prix médian de 5 160 €/m², Antony dépasse de 31,6% la moyenne du réseau établie à 3 920 €/m², soit un écart positif de 1 240 €/m².
+
+Cette supériorité de valorisation se vérifie pour les deux types de biens. Pour les maisons, la moitié des transactions à Antony dépasse 6 178 €/m², contre 4 743 €/m² dans les autres communes. Pour les appartements, le prix médian s'élève à 4 953 €/m² à Antony, contre 3 927 €/m² ailleurs.
+
+Cette position enviable classe Antony parmi les communes les plus riches du réseau. Ce statut suggère que la commune attire une population plutôt aisée, avec un marché davantage tourné vers des biens haut de gamme. 
+
+
+### A.5 Autres remarques
+
+```{r echo=FALSE, results='hide'}
+# 1. Superficie moyenne par type de bien
+
+#SUPERFICIE MOYENNE DES BIENS 
+sup_maisons <- mean(don$sup[don$type == "Maison"])
+sup_apparts <- mean(don$sup[don$type == "Appartement"])
+sup_apparts
+sup_maisons
+# Test statistique de la différence de superficie
+ t.test(sup ~ type, data = don) #p-value < 2.2e-16
+
+# 2. Nombre de pièces moyen
+nbp_maisons <- mean(don$nbp[don$type == "Maison"])
+nbp_apparts <- mean(don$nbp[don$type == "Appartement"])
+nbp_apparts
+nbp_maisons
+# Test statistique du nombre de pièces
+ t.test(nbp ~ type, data = don) #p-value < 2.2e-16
+
+# 3. Analyse de la distance à la gare
+dist_moyenne <- mean(don$dist_gare)
+dist_median <- median(don$dist_gare)
+dist_median
+dist_moyenne
+
+# Calcul des quantiles de distance
+quantiles_dist <- quantile(don$dist_gare, probs = c(0.25, 0.5, 0.75))
+
+# Évaluation de l'accessibilité
+if(quantiles_dist[2] < 1000) {
+  print("→ Excellente accessibilité aux transports")
+} else if(quantiles_dist[2] < 2000) {
+  print("→ Bonne accessibilité aux transports")
+  }else {
+  print("→ Accessibilité modérée aux transports")
+       }
+```
+
+
+L'analyse du marché immobilier d'Antony révèle des caractéristiques structurelles importantes. Les maisons se distinguent nettement des appartements par leur superficie moyenne de 106 m² contre 62 m², et par leur nombre de pièces moyen de 4,6 contre 2,9. Cette différenciation explique en partie les écarts de valorisation observés entre les deux types de biens.
+
+Par ailleurs, Antony bénéficie d'une accessibilité exceptionnelle aux transports, avec la moitié des biens situés à moins de 500 mètres d'une gare et les trois quarts à moins de 650 mètres. Cette desserte de qualité renforce l'attractivité résidentielle de la commune.
+
+La stabilité du volume des transactions sur la période étudiée témoigne de la solidité du marché immobilier local. Ces éléments combinés - parc immobilier diversifié, excellente accessibilité et marché régulier - confirment le positionnement privilégié d'Antony dans le paysage immobilier francilien et offrent des perspectives favorables au développement de notre activité.
+
+## B. IMPACT DE LA CRISE DU COVID EN 2020-21 
+
+```{r echo=FALSE, results='hide'}
+
+# Étape 1 :  prix au m² 
+don$prix_m2 <- don$prix / don$sup #rappel
+
+# Étape 2 : Séparation avant et pendant la crise COVID
+avant_covid <- don[don$ann < 2020, ]    # années avant 2020
+pendant_covid <- don[don$ann >= 2020, ] # 2020 et 2021
+
+# Étape 3 : Calcul du prix médian au m² par type de bien avant et pendant
+avant <- aggregate(prix_m2 ~ type, data = avant_covid, FUN = median, na.rm = TRUE)
+pendant <- aggregate(prix_m2 ~ type, data = pendant_covid, FUN = median, na.rm = TRUE)
+
+# Affichage des résultats
+avant
+pendant
+
+# On commence par tracer la courbe pour les APPARTEMENTS
+moy_ann_type <- aggregate(prix_m2 ~ ann + type, data = don, FUN = mean, na.rm = TRUE)
+
+plot(
+  moy_ann_type$ann[moy_ann_type$type == "Appartement"],   # Années
+  moy_ann_type$prix_m2[moy_ann_type$type == "Appartement"], # Prix au m²
+  type = "o",                  # "o" = points + lignes
+  col = "steelblue",
+  lwd = 2,                     # Épaisseur de la ligne
+  ylim = c(min(moy_ann_type$prix_m2), max(moy_ann_type$prix_m2)),
+  xlab = "Année",
+  ylab = "Prix moyen au m² (€)",
+  main = "Évolution du prix au m² à Antony (2017–2021)",
+   sub= "Source: DVF (dotation de valeurs foncières)"     )
+
+# On ajoute ensuite la courbe pour les MAISONS
+lines(
+  moy_ann_type$ann[moy_ann_type$type == "Maison"],        # Années
+  moy_ann_type$prix_m2[moy_ann_type$type == "Maison"],    # Prix au m²
+  type = "o",   
+  col = "tomato",
+  lwd = 2 
+         )
+
+# Ajout d’une légende pour distinguer les deux courbes
+legend(
+  "topleft",                  # Position de la légende (en haut à gauche)
+  legend = c("Appartements", "Maisons"), # Texte de la légende
+  col = c("steelblue", "tomato"),        # Couleurs correspondantes
+  lty = 1, lwd = 2             # Type et épaisseur des lignes
+     )
+
+```
+
+Face aux hésitations légitimes de nos clients concernant les fluctuations du marché immobilier pendant la crise COVID-19, notre analyse apporte des éléments concrets et rassurants pour éclairer leurs décisions.
+
+**Notre message aux clients** s'appuie sur des constats solides : le marché immobilier d'Antony a démontré une résilience remarquable durant cette période. Loin de subir une baisse, les prix ont maintenu une progression constante, confirmant la position d'Antony comme valeur refuge. Les appartements ont vu leur prix médian passer de 4 560 €/m² à 5 214 €/m², soit une augmentation de 14,3%, tandis que les maisons ont consolidé leur valorisation avec une progression de 8,5%, atteignant 6 160 €/m².
+
+**Les tendances diffèrent** sensiblement entre les deux types de biens. Les appartements ont bénéficié de la plus forte progression, tirés par l'attractivité maintenue du centre-ville et son excellente desserte en transports. Les maisons, déjà positionnées sur un segment premium, ont confirmé leur statut de produit rare avec une croissance plus modérée mais solide.
+
+**Notre conseil** s'adapte à chaque profil. Aux vendeurs, nous confirmons que leur bien a conservé, voire accru sa valeur durant la crise. Aux acheteurs, nous soulignons qu'investir à Antony représente un choix sûr, avec un marché qui a fait ses preuves en période difficile. La croissance maintenue des prix témoigne de la confiance durable des acquéreurs dans l'avenir de la commune.
+
+
+## CONCLUSION 
+
+Cette analyse approfondie du marché immobilier d'Antony témoigne de notre capacité à extraire des données brutes des enseignements stratégiques directement actionnables. Notre démarche allie rigueur méthodologique et vision opérationnelle, avec une exploitation systématique des données DVF, des traitements statistiques adaptés et une segmentation fine permettant de révéler les dynamiques cachées du marché.
+
+Notre analyse a mis en lumière la structure duale du marché antonien, marquée par une dominance quantitative des appartements mais une valorisation supérieure des maisons, confirmant le statut résidentiel premium de la commune
+
+La mesure précise de l'impact de la crise COVID a permis d'établir la résilience exceptionnelle du marché, avec des progressions de 14,3% pour les appartements et 8,5% pour les maisons entre 2019 et 2021
+
+Le positionnement comparatif place Antony nettement au-dessus de la moyenne du réseau, avec un écart de valorisation de +31,6% qui en fait un marché stratégique pour l'agence
+
+Je souhaite rester à la tête de l'agence d'Antony, considérant que cette commune représente un gisement de valeur exceptionnel pour notre développement. Plusieurs éléments fondent cette décision :
+
+La solidité démontrée du marché pendant la crise sanitaire conforte son statut de valeur refuge dans le paysage immobilier francilien
+
+Les prix médians élevés, avec une moitié des appartements vendus au-dessus de 5 214 euros le mètre carré et une moitié des maisons au-dessus de 6 160 euros le mètre carré, permettent des marges commerciales substantielles
+
+La croissance soutenue et la demande constante offrent des perspectives de développement optimales pour notre agence
+
+La clientèle aisée et exigeante représente un terrain d'excellence pour déployer notre expertise en conseil immobilier de haut de gamme
+
+Cette analyse démontre notre maîtrise des outils statistiques et notre capacité à traduire des données complexes en stratégies commerciales performantes. Notre valeur ajoutée réside dans cette double compétence, technique et opérationnelle, qui nous permet de piloter la performance avec une vision éclairée par la data.
+
+Antony constitue le terrain d'exercice idéal pour mettre en œuvre l'ensemble des compétences démontrées dans ce rapport. J'entends y développer une approche innovante du conseil immobilier, fondée sur l'analyse data et tournée vers l'excellence du service client, faisant de notre agence la référence incontournable sur ce territoire d'exception.
+
+
+
+
