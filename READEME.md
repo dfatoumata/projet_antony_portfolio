@@ -10,10 +10,10 @@ sur **8 ans** (2017-2025), réalisée pour l'agence immobilière **Piazza Marghe
 
 Le projet se structure en **2 phases complémentaires** :
 
-###  [Phase 1 : Analyse Rétrospective (2017-2021)](projet1-analyse-2017-2021/)
+###  [Phase 1 : Analyse Rétrospective (https://github.com/dfatoumata/projet_antony_portfolio/tree/c1b167e6440eab20bc7a9997146e977db2ba9312/partie1_situation_globale_2017_2021)
 **Comprendre le passé** - Diagnostic du marché et impact COVID
 
-###  [Phase 2 : Analyse Prédictive (S1 2025)]
+###  [Phase 2 : Analyse Prédictive (S1 2025)] (https://github.com/dfatoumata/projet_antony_portfolio/tree/c1b167e6440eab20bc7a9997146e977db2ba9312/partie2_immobilier_antony_S1_2025)
 **Prédire l'avenir** - Modèles statistiques et outils d'aide à la décision
 
 ---
@@ -105,8 +105,8 @@ Pendant COVID (2020-2021) : 6 160 €/m²
 
 | Phase       | README                                                              | Contenu                                    |
 |-------------|---------------------------------------------------------------------|--------------------------------------------|
-| **Phase 1** | [README_partie1.md](https://github.com/dfatoumata/projet_antony_portfolio/blob/c1b167e6440eab20bc7a9997146e977db2ba9312/partie1_situation_globale_2017_2021/README_projet1.md)| Méthodologie, résultats, insights Phase 1  |
-| **Phase 2** | [README_partie2.md](https://github.com/dfatoumata/projet_antony_portfolio/blob/c1b167e6440eab20bc7a9997146e977db2ba9312/partie2_immobilier_antony_S1_2025/README_projet2.md)  | Modèles, formules, recommandations Phase 2 |
+| **Phase 1** | [README_partie1.md](https://github.com/dfatoumata/projet_antony_portfolio/blob/main/partie1_situation_globale_2017_2021/README_projet1.md)| Méthodologie, résultats, insights Phase 1  |
+| **Phase 2** | [README_partie2.md](https://github.com/dfatoumata/projet_antony_portfolio/blob/main/partie2_immobilier_antony_S1_2025/README_projet2.md)  | Modèles, formules, recommandations Phase 2 |
 
 ---
 
@@ -146,8 +146,6 @@ Pendant COVID (2020-2021) : 6 160 €/m²
  **Résilience COVID** : Croissance maintenue (valeur refuge)  
  **Accessibilité** : 75% des biens < 650m de la gare  
  **Stabilité** : Volume transactions constant  
-
-** [Voir le détail complet Phase 1 →](projet1-analyse-2017-2021/)**
 
 ---
 
