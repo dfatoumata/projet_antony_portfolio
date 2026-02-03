@@ -561,11 +561,7 @@ Maison 120 m², 5p ?
 2. Automatiser estimation biens (API)
 3. Benchmark concurrence sur données
 
-```
-
- 
 ---
-
 ### Conclusion du Projet 2
 
 Cette phase d'analyse prédictive a permis de développer des **outils opérationnels concrets** pour l'agence Piazza Margherita :
@@ -584,7 +580,6 @@ Cette phase d'analyse prédictive a permis de développer des **outils opératio
  **Décisions éclairées** : Outils objectifs d'aide à la décision  
  **Avantage concurrentiel** : Rares agences avec modèles prédictifs  
 
-```
 ---
 
 ##  Méthodologie
@@ -650,6 +645,7 @@ Partie2_immobilier_antony_S1_2025
 ├── images                        # Logo agence
 ├── rapport_2025.qmd              # Code source Quarto
 └── rapport_2025.html             # Rapport HTML final 
+```
 ---
 ##  [Simulateur](https://fatoumatadiallo2004.shinyapps.io/antony/)
 ---
