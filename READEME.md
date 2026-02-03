@@ -12,27 +12,22 @@ Le projet se structure en **2 phases complémentaires** :
 
 ###  [Phase 1 : Analyse Rétrospective](https://github.com/dfatoumata/projet_antony_portfolio/tree/main/partie1_situation_globale_2017_2021)
 **Comprendre le passé** - Diagnostic du marché et impact COVID
+ [Voir Rapport 2017-2021](https://dfatoumata.github.io/projet_antony_portfolio/partie1_situation_globale_2017_2021/Rapport_Antony_Commune.html)
 
 ###  [Phase 2 : Analyse Prédictive S1 2025](https://github.com/dfatoumata/projet_antony_portfolio/tree/main/partie2_immobilier_antony_S1_2025)
 **Prédire l'avenir** - Modèles statistiques et outils d'aide à la décision
+ [Voir Rapport S1 2025](https://dfatoumata.github.io/projet_antony_portfolio/partie2_immobilier_antony_S1_2025/Rapport_antonye_fatoumata.html) 
 
 ##  [Simulateur](https://fatoumatadiallo2004.shinyapps.io/antony/)
 ---
 
 ##  Objectifs Globaux
 
-### Stratégiques
 -  Établir un **diagnostic complet** du marché immobilier d'Antony
 - Mesurer l'**évolution sur 8 ans** (2017-2025)
 -  Quantifier l'**impact de la crise COVID-19** (2020-2021)
 - Positionner Antony vs autres communes du réseau
 - Développer des **modèles prédictifs** opérationnels
-
-### Opérationnels
-- Créer des **outils d'aide à la décision** pour conseillers
--  Établir un **guide budget-client** par taille de logement
--  Prédire **surface = f(prix)** par type de bien
--  Estimer **prix = f(caractéristiques)** avec régression multiple
 
 ---
 
@@ -93,16 +88,7 @@ Pendant COVID (2020-2021) : 6 160 €/m²
 
 ---
 
-## Accès Rapide aux Rapports
-
-### Rapports HTML Complets
-
-| Phase        | Lien Direct |
-|--------------|-------------|
-| ** Phase 1** | [Voir Rapport 2017-2021](https://dfatoumata.github.io/projet_antony_portfolio/partie1_situation_globale_2017_2021/Rapport_Antony_Commune.html) |
-| ** Phase 2** | [Voir Rapport S1 2025](https://dfatoumata.github.io/projet_antony_portfolio/partie2_immobilier_antony_S1_2025/Rapport_antonye_fatoumata.html)     |        
-
-### Documentation Détaillée
+## Documentation Détaillée
 
 | Phase       | README                                                              | Contenu                                    |
 |-------------|---------------------------------------------------------------------|--------------------------------------------|
@@ -327,5 +313,4 @@ Email : fatimediallo111@gmail.com
  
 ---
 *Dernière mise à jour : Janvier 2026*  
-```
 ---
