@@ -473,8 +473,6 @@ Prix = 592 576 € ≈ 593 000 €
 ---
 
 
----
-
 ## Visualisations Créées
 
 ### Graphiques Principaux
@@ -484,19 +482,6 @@ Prix = 592 576 € ≈ 593 000 €
 3. **Boxplots** : Comparaisons prix par type et taille
 4. **Nuages de points + droites régression** : Modèles prédictifs
 5. **Graphiques diagnostiques** : Validation modèles (résidus, QQ-plots)
-
-### Exemple Code Régression
-```r
-# Nuage de points + régression
-plot(appartements$prix / 1000, appartements$sup,
-     main = "Relation Prix-Surface (Appartements)",
-     xlab = "Prix (k€)",
-     ylab = "Surface (m²)",
-     pch = 19,
-     col = rgb(0, 0, 1, 0.5))
-
-abline(modele_appart, col = "red", lwd = 2)
-```
 
 ---
 
@@ -666,7 +651,8 @@ Partie2_immobilier_antony_S1_2025
 ├── rapport_2025.qmd              # Code source Quarto
 └── rapport_2025.html             # Rapport HTML final 
 ---
-
+##  [Simulateur](https://fatoumatadiallo2004.shinyapps.io/antony/)
+---
 ##  Contact
 
 **Fatoumata Diallo**  

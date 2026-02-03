@@ -16,6 +16,7 @@ Le projet se structure en **2 phases complémentaires** :
 ###  [Phase 2 : Analyse Prédictive S1 2025](https://github.com/dfatoumata/projet_antony_portfolio/tree/main/partie2_immobilier_antony_S1_2025)
 **Prédire l'avenir** - Modèles statistiques et outils d'aide à la décision
 
+##  [Simulateur](https://fatoumatadiallo2004.shinyapps.io/antony/)
 ---
 
 ##  Objectifs Globaux
@@ -315,7 +316,7 @@ projet_antony_portfolio
 │
 └── .gitignore
 ```
-##  [Simulateur)](https://fatoumatadiallo2004.shinyapps.io/antony/)
+##  [Simulateur](https://fatoumatadiallo2004.shinyapps.io/antony/)
  
  
 ---
